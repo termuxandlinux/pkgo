@@ -18,4 +18,18 @@ dpkg -i pkgo_1.0_all.deb
 rm pkgo_1.0_all.deb 
 ```
 
+Wrapper/Bash
+```bash
+wget https://raw.githubusercontent.com/termuxandlinux/pkgo/main/wrapper/bash/pkg/pkgo.deb
+dpkg -i pkgo.deb
+rm pkgo.deb
+```
+
+Wrapper/C
+```bash 
+wget https://raw.githubusercontent.com/termuxandlinux/pkgo/main/wrapper/c/pkg/pkgo.deb
+dpkg -i pkgo.deb
+rm pkgo.deb
+```
+
 The Bash and the C Version workes
