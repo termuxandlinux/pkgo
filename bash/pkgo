@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Package name, passed as the first argument
+packageName=$1
+
+# Check if a package name was provided
+if [ -z "$packageName" ]; then
+    echo "Please provide the package name as an argument."
+    exit 1
+fi
+
+# Construct the URL for the package
+url="https://termux-pkg.netlify.app/$packageName/pkg/${packageName}.deb"
+
+# Directory to save the downloaded file
+pkgDir="./$packageName/pkg"
+
+# Download the file
+wget "$url"
+
+echo "The latest package has been downloaded: $packageName"
+
+dpkg -i "${packageName}.deb"
+
+rm -r -f "${packageName}.deb"
