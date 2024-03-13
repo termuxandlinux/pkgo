@@ -38,6 +38,12 @@ wget https://raw.githubusercontent.com/termuxandlinux/pkgo/main/custom/pkg/pkgo.
 dpkg -i pkgo.deb 
 rm pkgo.deb
 ```
+Update 
+```bash
+wget https://raw.githubusercontent.com/termuxandlinux/pkgo/main/custom/pkg/pkgo_1.2_all.deb
+dpkg -i pkgo*.deb
+rm pkgo*.deb
+```
 
 Before you use the custom version setup the url
 start
