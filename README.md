@@ -49,12 +49,12 @@ Before you use the custom version setup the url
 start
 ```bash
 pkgo -- setup
-echo 'https://termux-pkg.netlify.app/' >> $HOME/.url/url.txt
+echo 'https://termux-pkg.netlify.app' >> $HOME/.url/url.txt
 ```
 
 You can write same repo with
 ```bash
-echo.'https://yourrepo.com/' >> $HOME/.url/url.txt
+echo.'https://yourrepo.com' >> $HOME/.url/url.txt
 ```
 
 Pls use the same construct how the pkg list here.[PKG](https://github.com/ternuxandlinux/pkg)
