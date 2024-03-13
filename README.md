@@ -58,3 +58,13 @@ echo.'https://yourrepo.com' >> $HOME/.url/url.txt
 ```
 
 Pls use the same construct how the pkg list here.[PKG](https://github.com/ternuxandlinux/pkg)
+
+## Debian/Ubuntu
+
+```bash
+wget https://github.com/termuxandlinux/pkgo/raw/main/pkgo/pkg/pkgo.deb
+sudo dpkg -i pkgo.deb
+rm pkgo.deb
+```
+
+
