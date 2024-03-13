@@ -37,53 +37,55 @@ if [ "$1" = "--" ]; then
     exit 0
 fi
 
-# Check if the first argument is "-i", "-s", or "-u"
-if [ "$1" = "-i" ] || [ "$1" = "-s" ] || [ "$1" = "-u" ]; then
-    # Check if exactly two or three arguments are provided
-    if [ "$1" = "-u" ] && [ $# -ne 3 ]; then
-        echo "Usage: $0 -u <package_name> <extra_argument>"
-        exit 1
-    elif [ $# -lt 2 ] || [ $# -gt 3 ]; then
-        echo "Usage: $0 [-i|-s] <package_name> [extra_argument]"
+# Check if the first argument is "-i", "-s", "-u", or "-d"
+if [ "$1" = "-i" ] || [ "$1" = "-s" ] || [ "$1" = "-u" ] || [ "$1" = "-d" ]; then
+    # Check if exactly two arguments are provided
+    if [ $# -ne 2 ]; then
+        echo "Usage: $0 [-i|-s|-u|-d] <package_name>"
         exit 1
     fi
 
-    # Search for the package URL
+    # Package names are pulled from the "new" or "old" directory
     packageName=$2
-    while read -r url; do
-        if [ "$1" = "-u" ]; then
-            extraArg="$3"
-            fullUrl="$url/${packageName}/pkg/${extraArg}/${packageName}.deb"
-            wget "$fullUrl"
-            if [ $? -eq 0 ]; then
-                echo "The latest package has been downloaded: $packageName"
-                dpkg -i "${packageName}.deb"
-                rm -f "${packageName}.deb"
-                exit 0
-            else
-                echo "Failed to download package: $packageName"
-                exit 1
+    if [ "$1" = "-u" ]; then
+        fullUrl="$url/${packageName}/pkg/new/${packageName}.deb"
+    elif [ "$1" = "-d" ]; then
+        fullUrl="$url/${packageName}/pkg/old/${packageName}.deb"
+    else
+        # Search for package URL or package
+        while read -r url; do
+            if [ "$1" = "-i" ]; then
+                fullUrl="$url/${packageName}/pkg/${packageName}.deb"
+                wget "$fullUrl"
+                if [ $? -eq 0 ]; then
+                    echo "The latest package has been downloaded: $packageName"
+                    dpkg -i "${packageName}.deb"
+                    rm -f "${packageName}.deb"
+                    exit 0
+                fi
+            elif [ "$1" = "-s" ]; then
+                fullUrl="$url/${packageName}/pkg/${packageName}.deb"
+                wget -q --spider "$fullUrl"
+                if [ $? -eq 0 ]; then
+                    echo "Package found: $packageName"
+                    exit 0
+                fi
             fi
-        elif [ "$1" = "-i" ]; then
-            fullUrl="$url/${packageName}/pkg/${packageName}.deb"
-            wget "$fullUrl"
-            if [ $? -eq 0 ]; then
-                echo "The latest package has been downloaded: $packageName"
-                dpkg -i "${packageName}.deb"
-                rm -f "${packageName}.deb"
-                exit 0
-            fi
-        elif [ "$1" = "-s" ]; then
-            fullUrl="$url/${packageName}/pkg/${packageName}.deb"
-            wget -q --spider "$fullUrl"
-            if [ $? -eq 0 ]; then
-                echo "Package found: $packageName"
-                exit 0
-            fi
-        fi
-    done < "$URL_FILE"
-    echo "Failed to find package: $packageName"
-    exit 1
+        done < "$URL_FILE"
+        echo "Failed to find package: $packageName"
+        exit 1
+    fi
+
+    wget "$fullUrl"
+    if [ $? -eq 0 ]; then
+        echo "The latest package has been downloaded: $packageName"
+        dpkg -i "${packageName}.deb"
+        rm -f "${packageName}.deb"
+        exit 0
+    else
+        echo "Failed to download package: $packageName"
+        exit 1
+    fi
 fi
 
 # Check if the first argument is "install" or "search"
