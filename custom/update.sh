@@ -40,7 +40,7 @@ fi
 # Check if the first argument is "-i", "-s", or "-u"
 if [ "$1" = "-i" ] || [ "$1" = "-s" ] || [ "$1" = "-u" ]; then
     # Check if exactly two or three arguments are provided
-    if [ "$1" = "-u" ] && [ $# -ne 4 ]; then
+    if [ "$1" = "-u" ] && [ $# -ne 3 ]; then
         echo "Usage: $0 -u <package_name> <extra_argument>"
         exit 1
     elif [ $# -lt 2 ] || [ $# -gt 3 ]; then
