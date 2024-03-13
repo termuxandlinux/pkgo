@@ -48,7 +48,7 @@ if [ "$1" = "-i" ] || [ "$1" = "-s" ]; then
     # Search for the package URL
     packageName=$2
     while read -r url; do
-        fullUrl="$url/${packageName}/pkg/${packageName}*_*_*.deb"
+        fullUrl="$url/${packageName}/pkg/${packageName*}.deb"
         if [ "$1" = "-i" ]; then
             wget "$fullUrl"
             if [ $? -eq 0 ]; then
