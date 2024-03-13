@@ -1,12 +1,12 @@
 {
   "name": "pkgo",
-  "version": "1.2",
+  "version": "1.3",
   "arch": "all",
   "maintainer": "Kevin Alexander <termuxandlinux@github.com>",
   "description": "Package Installer Own Package",
   "homepage": "https://examplewebsite.com",
   "depends": ["wget", "bash"],
   "files": {
-    "update2.sh": "/data/data/com.termux/files/usr/bin/pkgo"
+    "update.sh": "/data/data/com.termux/files/usr/bin/pkgo"
   }
 }
