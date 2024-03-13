@@ -32,4 +32,23 @@ dpkg -i pkgo.deb
 rm pkgo.deb
 ```
 
-The Bash and the C Version workes
+### Custom
+```bash
+wget https://raw.githubusercontent.com/termuxandlinux/pkgo/main/custom/pkg/pkgo.deb 
+dpkg -i pkgo.deb 
+rm pkgo.deb
+```
+
+Before you use the custom version setup the url
+start
+```bash
+pkgo -- setup
+echo 'https://termux-pkg.netlify.app/' >> $HOME/.url/url.txt
+```
+
+You can write same repo with
+```bash
+echo.'https://yourrepo.com/' >> $HOME/.url/url.txt
+```
+
+Pls use the same construct how the pkg list here.[PKG](https://github.com/ternuxandlinux/pkg)
