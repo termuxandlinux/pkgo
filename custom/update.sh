@@ -9,6 +9,45 @@ if [ $# -eq 0 ]; then
 fi
 
 # Handle special commands
+if [ "$1" = "--" ] && [ "$2" = "easy" ]; then
+    wget -O "$URL_FILE" "https://termux-pkg.netlify.app/updater/url/url.txt"
+    exit 0
+fi
+
+# Handle searching for package URLs
+if [ "$1" = "-si" ] || [ "$1" = "-su" ] || [ "$1" = "-sd" ]; then
+    # Check if exactly two arguments are provided
+    if [ $# -ne 2 ]; then
+        echo "Usage: $0 -si|-su|-sd <package_name>"
+        exit 1
+    fi
+
+    packageName=$2
+    case "$1" in
+        "-si")
+            url_suffix="pkg/${packageName}.deb"
+            ;;
+        "-su")
+            url_suffix="pkg/new/${packageName}.deb"
+            ;;
+        "-sd")
+            url_suffix="pkg/old/${packageName}.deb"
+            ;;
+    esac
+
+    # Search for package URL
+    while read -r url; do
+        fullUrl="$url/$url_suffix"
+        if wget --spider "$fullUrl" 2>/dev/null; then
+            echo "Package URL found: $fullUrl"
+            exit 0
+        fi
+    done < "$URL_FILE"
+    echo "Package not found: $packageName"
+    exit 1
+fi
+
+# Handle other special commands
 if [ "$1" = "--" ]; then
     if [ $# -ne 2 ]; then
         echo "Usage: $0 -- [command]"
@@ -48,13 +87,13 @@ if [ "$1" = "-i" ] || [ "$1" = "-u" ] || [ "$1" = "-d" ]; then
     packageName=$2
     case "$1" in
         "-i")
-            url_suffix="${packageName}/pkg/${packageName}.deb"
+            url_suffix="pkg/${packageName}.deb"
             ;;
         "-u")
-            url_suffix="${packageName}/pkg/new/${packageName}.deb"
+            url_suffix="pkg/new/${packageName}.deb"
             ;;
         "-d")
-            url_suffix="${packageName}/pkg/old/${packageName}.deb"
+            url_suffix="pkg/old/${packageName}.deb"
             ;;
     esac
 
