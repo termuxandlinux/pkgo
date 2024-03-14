@@ -48,7 +48,7 @@ if [ "$1" = "-i" ]; then
     # Paket installieren
     packageName=$2
     while read -r url; do
-        fullUrl="$url/${packageName}/deb/${packageName}.deb"
+        fullUrl="$url/${packageName}/deb/new/${packageName}.deb"
         wget "$fullUrl"
         if [ $? -eq 0 ]; then
             echo "Das neueste Paket wurde heruntergeladen: $packageName"
@@ -61,17 +61,52 @@ if [ "$1" = "-i" ]; then
     exit 1
 fi
 
-# Überprüfen, ob das erste Argument "install" oder "search" ist
-if [ "$1" = "install" ] || [ "$1" = "search" ]; then
+# Überprüfen, ob das erste Argument "-u" ist
+if [ "$1" = "-u" ]; then
     # Überprüfen, ob genau zwei Argumente bereitgestellt werden
     if [ $# -ne 2 ]; then
-        echo "Verwendung: $0 [install|search] <Paketname>"
+        echo "Verwendung: $0 -u <Paketname>"
         exit 1
     fi
 
-    # Argumente an "apt" Befehl übergeben
-    apt "$@"
-    exit 0
+    # Paket installieren
+    packageName=$2
+    while read -r url; do
+        fullUrl="$url/${packageName}/deb/new/${packageName}.deb"
+        wget "$fullUrl"
+        if [ $? -eq 0 ]; then
+            echo "Das neueste Paket wurde heruntergeladen: $packageName"
+            dpkg -i "${packageName}.deb"
+            rm -f "${packageName}.deb"
+            exit 0
+        fi
+    done < "$URL_FILE"
+    echo "Fehler beim Herunterladen des Pakets: $packageName"
+    exit 1
+fi
+
+# Überprüfen, ob das erste Argument "-d" ist
+if [ "$1" = "-d" ]; then
+    # Überprüfen, ob genau zwei Argumente bereitgestellt werden
+    if [ $# -ne 2 ]; then
+        echo "Verwendung: $0 -d <Paketname>"
+        exit 1
+    fi
+
+    # Paket installieren
+    packageName=$2
+    while read -r url; do
+        fullUrl="$url/${packageName}/deb/old/${packageName}.deb"
+        wget "$fullUrl"
+        if [ $? -eq 0 ]; then
+            echo "Die ältere Version des Pakets wurde heruntergeladen: $packageName"
+            dpkg -i "${packageName}.deb"
+            rm -f "${packageName}.deb"
+            exit 0
+        fi
+    done < "$URL_FILE"
+    echo "Fehler beim Herunterladen der älteren Version des Pakets: $packageName"
+    exit 1
 fi
 
 echo "Ungültige Argumente bereitgestellt."
